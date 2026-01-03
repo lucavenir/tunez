@@ -7,6 +7,7 @@ defmodule Tunez.Music.Artist do
 
   json_api do
     type "artist"
+    derive_filter? false
   end
 
   postgres do
@@ -16,6 +17,10 @@ defmodule Tunez.Music.Artist do
     custom_indexes do
       index "name gin_trgm_ops", name: "artists_name_gin_index", using: "GIN"
     end
+  end
+
+  resource do
+    description "A person or group of people that makes and releases music."
   end
 
   actions do
@@ -29,11 +34,13 @@ defmodule Tunez.Music.Artist do
     end
 
     read :search do
+      description "List artists, optionally filtering by name"
       pagination offset?: true, default_limit: 12
 
       prepare build(load: [:album_count, :latest_album_year_released, :cover_image_url])
 
       argument :query, :ci_string do
+        description "Return only artists with names including the given query"
         constraints allow_empty?: true
         default ""
       end
