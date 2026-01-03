@@ -53,10 +53,19 @@ defmodule Tunez.Music.Album do
     belongs_to :artist, Tunez.Music.Artist, allow_nil?: false
   end
 
+  calculations do
+    # the following obviously sucks, it's just a quick experiment, but more on that later
+    calculate :years_ago, :integer, expr(2025 - year_released)
+
+    calculate :years_ago_wow,
+              :string,
+              expr("wow, this was released " <> years_ago <> " years ago!")
+  end
+
+  def next_year, do: Date.utc_today().year + 2
+
   identities do
     identity :unique_album_per_artist, [:name, :artist_id],
       message: "an album with this name already exists for this artist"
   end
-
-  def next_year, do: Date.utc_today().year + 2
 end
