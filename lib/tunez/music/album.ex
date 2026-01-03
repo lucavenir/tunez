@@ -2,7 +2,12 @@ defmodule Tunez.Music.Album do
   use Ash.Resource,
     otp_app: :tunez,
     domain: Tunez.Music,
-    data_layer: AshPostgres.DataLayer
+    data_layer: AshPostgres.DataLayer,
+    extensions: [AshJsonApi.Resource]
+
+  json_api do
+    type "album"
+  end
 
   postgres do
     table "albums"
@@ -42,9 +47,9 @@ defmodule Tunez.Music.Album do
   attributes do
     uuid_v7_primary_key :id
 
-    attribute :name, :string, allow_nil?: false
-    attribute :year_released, :integer, allow_nil?: false
-    attribute :cover_image_url, :string
+    attribute :name, :string, allow_nil?: false, public?: true
+    attribute :year_released, :integer, allow_nil?: false, public?: true
+    attribute :cover_image_url, :string, public?: true
 
     timestamps()
   end
@@ -52,6 +57,8 @@ defmodule Tunez.Music.Album do
   relationships do
     belongs_to :artist, Tunez.Music.Artist, allow_nil?: false
   end
+
+  def next_year, do: Date.utc_today().year + 2
 
   calculations do
     # the following obviously sucks, it's just a quick experiment, but more on that later
@@ -61,8 +68,6 @@ defmodule Tunez.Music.Album do
               :string,
               expr("wow, this was released " <> years_ago <> " years ago!")
   end
-
-  def next_year, do: Date.utc_today().year + 2
 
   identities do
     identity :unique_album_per_artist, [:name, :artist_id],
