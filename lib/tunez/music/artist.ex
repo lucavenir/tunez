@@ -33,11 +33,11 @@ defmodule Tunez.Music.Artist do
   attributes do
     uuid_v7_primary_key :id
 
-    attribute :name, :string, allow_nil?: false
+    attribute :name, :string, allow_nil?: false, public?: true
     attribute :biography, :string
     attribute :previous_names, {:array, :string}, default: []
 
-    timestamps()
+    timestamps(public?: true)
   end
 
   relationships do

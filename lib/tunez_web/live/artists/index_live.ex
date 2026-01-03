@@ -13,11 +13,13 @@ defmodule TunezWeb.Artists.IndexLive do
 
   def handle_params(params, _url, socket) do
     query = Map.get(params, "q", "")
-    artists = Tunez.Music.search_artists!(query)
+    sort_by = Map.get(params, "sort_by") |> validate_sort_by()
+    artists = Tunez.Music.search_artists!(query, query: [sort_input: sort_by])
 
     socket =
       socket
       |> assign(:query, query)
+      |> assign(:sort_by, sort_by)
       |> assign(:artists, artists)
 
     {:noreply, socket}
@@ -30,6 +32,9 @@ defmodule TunezWeb.Artists.IndexLive do
         <.h1>Artists</.h1>
         <:action>
           <.search_box query={@query} method="get" data-role="artist-search" phx-submit="search" />
+        </:action>
+        <:action>
+          <.sort_changer selected={@sort_by} />
         </:action>
         <:action>
           <.button_link navigate={~p"/artists/new"} kind="primary">
@@ -154,8 +159,8 @@ defmodule TunezWeb.Artists.IndexLive do
 
   defp sort_options do
     [
-      {"recently updated", "updated_at"},
-      {"recently added", "inserted_at"},
+      {"recently updated", "-updated_at"},
+      {"recently added", "-inserted_at"},
       {"name", "name"}
     ]
   end
@@ -175,12 +180,12 @@ defmodule TunezWeb.Artists.IndexLive do
   end
 
   def handle_event("change-sort", %{"sort_by" => sort_by}, socket) do
-    params = remove_empty(%{q: socket.assigns.query_text, sort_by: sort_by})
+    params = remove_empty(%{q: socket.assigns.query, sort_by: sort_by})
     {:noreply, push_patch(socket, to: ~p"/?#{params}")}
   end
 
   def handle_event("search", %{"query" => query}, socket) do
-    params = remove_empty(%{q: query})
+    params = remove_empty(%{q: query, sort_by: socket.assigns.sort_by})
     {:noreply, push_patch(socket, to: ~p"/?#{params}")}
   end
 
