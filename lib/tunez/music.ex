@@ -14,6 +14,7 @@ defmodule Tunez.Music do
       define :list_artists, action: :read
       define :update_artist, action: :update
       define :destroy_artist, action: :destroy
+      define :search_artists, action: :search, args: [:query]
     end
 
     resource Tunez.Music.Album do
