@@ -21,6 +21,8 @@ defmodule Tunez.Music.Artist do
     end
 
     read :search do
+      pagination offset?: true, default_limit: 12
+
       argument :query, :ci_string do
         constraints allow_empty?: true
         default ""
