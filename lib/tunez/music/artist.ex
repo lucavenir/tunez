@@ -17,6 +17,8 @@ defmodule Tunez.Music.Artist do
     custom_indexes do
       index "name gin_trgm_ops", name: "artists_name_gin_index", using: "GIN"
     end
+
+    migration_defaults id: "fragment(\"uuidv7()\")"
   end
 
   resource do

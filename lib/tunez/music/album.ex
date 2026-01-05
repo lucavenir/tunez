@@ -16,6 +16,8 @@ defmodule Tunez.Music.Album do
     references do
       reference :artist, index?: true, on_delete: :delete
     end
+
+    migration_defaults id: "fragment(\"uuidv7()\")"
   end
 
   actions do
