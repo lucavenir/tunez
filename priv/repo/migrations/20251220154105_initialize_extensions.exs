@@ -1,4 +1,4 @@
-defmodule Tunez.Repo.Migrations.InitializeExtensions1 do
+defmodule Tunez.Repo.Migrations.InitializeExtensions do
   @moduledoc """
   Installs any extensions that are mentioned in the repo's `installed_extensions/0` callback
 
