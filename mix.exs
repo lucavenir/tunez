@@ -35,16 +35,16 @@ defmodule Tunez.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:ash_authentication_phoenix, "~> 2.0"},
+      {:ash_authentication_phoenix, "~> 2.14"},
       {:bcrypt_elixir, "~> 3.0"},
       {:picosat_elixir, "~> 0.2"},
-      {:ash_authentication, "~> 4.0"},
+      {:ash_authentication, "~> 4.13"},
       {:open_api_spex, "~> 3.0"},
-      {:ash_json_api, "~> 1.0"},
-      {:ash_phoenix, "~> 2.0"},
-      {:ash_postgres, "~> 2.0"},
+      {:ash_json_api, "~> 1.5"},
+      {:ash_phoenix, "~> 2.3"},
+      {:ash_postgres, "~> 2.6"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
-      {:ash, "~> 3.0"},
+      {:ash, "~> 3.12"},
       {:phoenix, "~> 1.8.0-rc.1", override: true},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.10"},

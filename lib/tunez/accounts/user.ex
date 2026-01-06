@@ -201,7 +201,6 @@ defmodule Tunez.Accounts.User do
     read :get_by_email do
       description "Looks up a user by their email"
       get_by :email
-      argument :email, Ash.Type.CiString, allow_nil?: false
     end
 
     update :reset_password_with_token do
