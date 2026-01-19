@@ -3,6 +3,7 @@ defmodule Tunez.Music.Album do
     otp_app: :tunez,
     domain: Tunez.Music,
     data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer],
     extensions: [AshJsonApi.Resource]
 
   json_api do
@@ -26,6 +27,16 @@ defmodule Tunez.Music.Album do
 
     update :update do
       accept [:name, :year_released, :cover_image_url]
+    end
+  end
+
+  policies do
+    bypass actor_attribute_equals(:role, :admin) do
+      authorize_if always()
+    end
+
+    policy action_type(:read) do
+      authorize_if always()
     end
   end
 

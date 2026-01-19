@@ -3,6 +3,7 @@ defmodule Tunez.Music.Artist do
     otp_app: :tunez,
     domain: Tunez.Music,
     data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer],
     extensions: [AshJsonApi.Resource]
 
   json_api do
@@ -48,6 +49,20 @@ defmodule Tunez.Music.Artist do
       end
 
       filter expr(contains(name, ^arg(:query)))
+    end
+  end
+
+  policies do
+    bypass actor_attribute_equals(:role, :admin) do
+      authorize_if always()
+    end
+
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action(:update) do
+      authorize_if actor_attribute_equals(:role, :editor)
     end
   end
 

@@ -68,6 +68,10 @@ defmodule Tunez.Accounts.User do
   actions do
     defaults [:read]
 
+    update :set_role do
+      accept [:role]
+    end
+
     read :get_by_subject do
       description "Get a user by the subject claim in a JWT"
       argument :subject, :string, allow_nil?: false
@@ -268,21 +272,19 @@ defmodule Tunez.Accounts.User do
     bypass AshAuthentication.Checks.AshAuthenticationInteraction do
       authorize_if always()
     end
+
+    policy action([:register_with_password, :sign_in_with_password]) do
+      authorize_if always()
+    end
   end
 
   attributes do
     uuid_v7_primary_key :id
 
-    attribute :email, :ci_string do
-      allow_nil? false
-      public? true
-    end
-
-    attribute :hashed_password, :string do
-      sensitive? true
-    end
-
+    attribute :email, :ci_string, allow_nil?: false, public?: true
+    attribute :hashed_password, :string, sensitive?: true
     attribute :confirmed_at, :utc_datetime_usec
+    attribute :role, Tunez.Accounts.Role, allow_nil?: false, default: :user
   end
 
   identities do
