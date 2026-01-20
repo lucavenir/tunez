@@ -15,7 +15,13 @@ defmodule TunezWeb.Artists.IndexLive do
     query = Map.get(params, "q", "")
     sort_by = Map.get(params, "sort_by") |> validate_sort_by()
     page_params = AshPhoenix.LiveView.params_to_page_opts(params, default_limit: 12)
-    page = Tunez.Music.search_artists!(query, page: page_params, query: [sort_input: sort_by])
+
+    page =
+      Tunez.Music.search_artists!(query,
+        page: page_params,
+        query: [sort_input: sort_by],
+        actor: socket.assigns.current_user
+      )
 
     socket =
       socket
@@ -37,7 +43,7 @@ defmodule TunezWeb.Artists.IndexLive do
         <:action>
           <.sort_changer selected={@sort_by} />
         </:action>
-        <:action>
+        <:action :if={Tunez.Music.can_create_artist?(@current_user)}>
           <.button_link navigate={~p"/artists/new"} kind="primary">
             New Artist
           </.button_link>

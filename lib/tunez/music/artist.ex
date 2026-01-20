@@ -3,6 +3,7 @@ defmodule Tunez.Music.Artist do
     otp_app: :tunez,
     domain: Tunez.Music,
     data_layer: AshPostgres.DataLayer,
+    authorizers: [Ash.Policy.Authorizer],
     extensions: [AshJsonApi.Resource]
 
   json_api do
@@ -51,6 +52,25 @@ defmodule Tunez.Music.Artist do
     end
   end
 
+  policies do
+    bypass actor_attribute_equals(:role, :admin) do
+      authorize_if always()
+    end
+
+    policy action_type(:read) do
+      authorize_if always()
+    end
+
+    policy action(:update) do
+      authorize_if actor_attribute_equals(:role, :editor)
+    end
+  end
+
+  changes do
+    change relate_actor(:created_by, allow_nil?: true), on: [:create]
+    change relate_actor(:last_updated_by, allow_nil?: true)
+  end
+
   attributes do
     uuid_v7_primary_key :id
 
@@ -66,6 +86,9 @@ defmodule Tunez.Music.Artist do
       sort year_released: :desc
       public? true
     end
+
+    belongs_to :created_by, Tunez.Accounts.User
+    belongs_to :last_updated_by, Tunez.Accounts.User
   end
 
   aggregates do
