@@ -45,7 +45,7 @@ defmodule Tunez.MixProject do
       {:ash_postgres, "~> 2.6"},
       {:sourceror, "~> 1.8", only: [:dev, :test]},
       {:ash, "~> 3.12"},
-      {:phoenix, "~> 1.8.0-rc.1", override: true},
+      {:phoenix, "~> 1.8.0"},
       {:phoenix_ecto, "~> 4.5"},
       {:ecto_sql, "~> 3.10"},
       {:postgrex, ">= 0.0.0"},
@@ -67,12 +67,12 @@ defmodule Tunez.MixProject do
       {:req, "~> 0.5"},
       {:telemetry_metrics, "~> 1.0"},
       {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.26 and >= 0.26.1"},
+      {:gettext, "~> 1.0.0"},
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2"},
       {:bandit, "~> 1.5"},
       {:igniter, "~> 0.3", only: [:dev]},
-      {:phoenix_test, "~> 0.7.0", only: :test, runtime: false}
+      {:phoenix_test, "~> 0.9", only: :test, runtime: false}
     ]
   end
 
