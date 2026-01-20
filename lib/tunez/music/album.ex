@@ -38,6 +38,19 @@ defmodule Tunez.Music.Album do
     policy action_type(:read) do
       authorize_if always()
     end
+
+    policy action(:create) do
+      authorize_if actor_attribute_equals(:role, :editor)
+    end
+
+    policy action_type([:update, :destroy]) do
+      authorize_if expr(^actor(:role) == :editor and created_by_id == ^actor(:id))
+    end
+  end
+
+  changes do
+    change relate_actor(:created_by, allow_nil?: true), on: [:create]
+    change relate_actor(:last_updated_by, allow_nil?: true)
   end
 
   validations do
@@ -69,6 +82,8 @@ defmodule Tunez.Music.Album do
 
   relationships do
     belongs_to :artist, Tunez.Music.Artist, allow_nil?: false
+    belongs_to :created_by, Tunez.Accounts.User
+    belongs_to :last_updated_by, Tunez.Accounts.User
   end
 
   def next_year, do: Date.utc_today().year + 2
